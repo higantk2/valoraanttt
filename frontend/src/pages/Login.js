@@ -1,28 +1,40 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api"; // <-- UPDATED: Imports api.js
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(""); // This will show errors
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setMessage(""); // Clear previous errors
+
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/users/token/", {
+      // UPDATED: Uses 'api' and a relative path
+      const res = await api.post("/api/users/token/", {
         username,
         password,
       });
+      
       localStorage.setItem("token", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
+      localStorage.setItem("refresh", res.data.refresh); // Kept this from your file
       navigate("/home");
+
     } catch (err) {
-      setMessage("❌ Login failed. Check username and password.");
+      // UPDATED: Better error handling
+      console.error("Login error", err);
+      if (err.response && err.response.data.detail) {
+        setMessage(`❌ ${err.response.data.detail}`);
+      } else {
+        setMessage("❌ Login failed. Please check your credentials.");
+      }
     }
   };
 
+  // Kept all your styles from the second file
   const buttonStyle = {
     backgroundColor: "#e63946",
     color: "white",
@@ -79,6 +91,7 @@ export default function Login() {
             marginBottom: "15px",
             borderRadius: "5px",
             border: "none",
+            boxSizing: "border-box" // Added for better padding behavior
           }}
         />
         <input
@@ -93,6 +106,7 @@ export default function Login() {
             marginBottom: "15px",
             borderRadius: "5px",
             border: "none",
+            boxSizing: "border-box" // Added for better padding behavior
           }}
         />
         <button
@@ -109,7 +123,10 @@ export default function Login() {
         </button>
 
         {message && (
-          <p style={{ color: "#f1faee", marginTop: "10px" }}>{message}</p>
+          // UPDATED: Style for the error message
+          <p style={{ color: "#ff4655", marginTop: "10px", fontWeight: "bold" }}>
+            {message}
+          </p>
         )}
 
         <p style={{ marginTop: "10px" }}>
