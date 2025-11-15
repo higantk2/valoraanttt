@@ -2,9 +2,9 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Count
-from django.contrib.auth.models import User # <-- NEW: Import User model
-from .models import Favorite
-from .serializers import FavoriteSerializer
+from django.contrib.auth.models import User
+from .models import Favorite, FavoriteWeapon # <-- Updated import
+from .serializers import FavoriteSerializer, FavoriteWeaponSerializer # <-- Updated import
 
 class FavoriteListCreate(generics.ListCreateAPIView):
     # ... (existing code) ...
@@ -25,6 +25,27 @@ class FavoriteDelete(generics.DestroyAPIView):
     def get_queryset(self):
         return Favorite.objects.filter(user=self.request.user)
 
+# --- NEW: WEAPON FAVORITE VIEWS ---
+
+class FavoriteWeaponListCreate(generics.ListCreateAPIView):
+    serializer_class = FavoriteWeaponSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return FavoriteWeapon.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class FavoriteWeaponDelete(generics.DestroyAPIView):
+    serializer_class = FavoriteWeaponSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return FavoriteWeapon.objects.filter(user=self.request.user)
+
+# --- (existing views below) ---
+
 class MostFavoritedAgentsView(APIView):
     # ... (existing code) ...
     permission_classes = [permissions.AllowAny] 
@@ -39,9 +60,6 @@ class MostFavoritedAgentsView(APIView):
 
         return Response(top_agents, status=status.HTTP_200_OK)
 
-# ------------------------------
-# NEW: View to search any user's favorites
-# ------------------------------
 class UserFavoritesSearchView(APIView):
     permission_classes = [permissions.AllowAny] # Publicly searchable
 

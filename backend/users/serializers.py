@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Profile  # <-- NEW: Import Profile
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,8 +15,14 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
+# --- NEW: Serializer for Profile Model ---
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'main_agent_uuid']
+
 # ------------------------------
-# NEW: Serializer for Changing Password
+# Serializer for Changing Password
 # ------------------------------
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True, write_only=True)

@@ -6,8 +6,9 @@ import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import AgentDetail from "./pages/AgentDetail";
 import TopAgents from "./pages/TopAgents";
-import Profile from "./pages/Profile"; // <-- ADD THIS IMPORT
+import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Weapons from "./pages/Weapons"; // <-- NEW IMPORT
 
 function App() {
   return (
@@ -48,12 +49,20 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* ADD NEW PROFILE ROUTE */}
         <Route
           path="/profile"
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        {/* --- NEW WEAPONS ROUTE --- */}
+        <Route
+          path="/weapons"
+          element={
+            <ProtectedRoute>
+              <Weapons />
             </ProtectedRoute>
           }
         />

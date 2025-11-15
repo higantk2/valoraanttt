@@ -153,6 +153,23 @@ export default function Home() {
     boxShadow: "0px 0px 10px #e63946",
     color: "white",
   };
+  
+  const navButtonStyle = {
+      backgroundColor: "#e63946",
+      color: "white",
+      border: "none",
+      padding: "8px 12px",
+      borderRadius: "5px",
+      cursor: "pointer",
+      marginLeft: "10px",
+      textDecoration: "none"
+  };
+  
+  const greenButtonStyle = {
+      ...navButtonStyle,
+      backgroundColor: "#06d6a0",
+  };
+
 
   return (
     <div
@@ -167,53 +184,28 @@ export default function Home() {
         padding: "20px",
       }}
     >
-      <header style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1>Valorant Agent Tracker</h1>
-        <div>
-          <button
-            onClick={handleLogout}
-            style={{
-              backgroundColor: "#e63946",
-              color: "white",
-              border: "none",
-              padding: "8px 12px",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: 'center', flexWrap: 'wrap' }}>
+        <h1 style={{marginRight: '20px'}}>Valorant Agent Tracker</h1>
+        <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+          <button onClick={handleLogout} style={navButtonStyle}>
             Logout
           </button>
           
-          <Link to="/top-agents"> 
-            <button
-              style={{
-                backgroundColor: "#06d6a0", 
-                color: "white",
-                border: "none",
-                padding: "8px 12px",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginLeft: "10px",
-              }}
-            >
-              Most Favorited Agents
-            </button>
+          <Link to="/top-agents" style={greenButtonStyle}> 
+            Top Agents
+          </Link>
+
+          {/* --- UPDATED: ADDED WEAPONS + PROFILE LINKS --- */}
+          <Link to="/weapons" style={greenButtonStyle}>
+            Weapons
           </Link>
           
-          <Link to="/favorites">
-            <button
-              style={{
-                backgroundColor: "#e63946",
-                color: "white",
-                border: "none",
-                padding: "8px 12px",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginLeft: "10px",
-              }}
-            >
-              Favorites
-            </button>
+          <Link to="/favorites" style={navButtonStyle}>
+            Favorites
+          </Link>
+          
+          <Link to="/profile" style={navButtonStyle}>
+            Profile
           </Link>
         </div>
       </header>
