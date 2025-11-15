@@ -7,7 +7,7 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000',
 });
 
-// ADD THIS NEW SECTION
+// ********** THIS IS THE MISSING CODE **********
 // This "interceptor" runs before every request made with "api"
 api.interceptors.request.use(
   (config) => {
@@ -16,7 +16,6 @@ api.interceptors.request.use(
     
     // If the token exists, add it to the Authorization header
     if (token) {
-      // Add the token in the format Django expects
       config.headers.Authorization = `Bearer ${token}`;
     }
     
@@ -27,5 +26,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+// ***********************************************
 
 export default api;
