@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import api from "../api"; // <-- ADD THIS
+import api from "../api"; // <-- ADDED
 
 export default function FavoriteWeapons() {
   const [favorites, setFavorites] = useState([]);
@@ -12,7 +12,7 @@ export default function FavoriteWeapons() {
   useEffect(() => {
     async function fetchFavorites() {
       try {
-        // This call is to an external API, so 'axios' is fine
+        // External API
         const weaponsRes = await axios.get("https://valorant-api.com/v1/weapons");
         const weaponsMap = weaponsRes.data.data.reduce((map, weapon) => {
           map[weapon.uuid] = weapon;
@@ -20,8 +20,8 @@ export default function FavoriteWeapons() {
         }, {});
         setAllWeapons(weaponsMap);
 
-        // --- CHANGED ---
-        const favoritesRes = await api.get("/api/favorites/weapons/", {
+        // Your backend
+        const favoritesRes = await api.get("/api/favorites/weapons/", { // <-- CHANGED
           headers: { Authorization: `Bearer ${token}` },
         });
         setFavorites(favoritesRes.data);
@@ -44,8 +44,7 @@ export default function FavoriteWeapons() {
 
   const removeFavorite = async (favId) => {
     try {
-      // --- CHANGED ---
-      await api.delete(`/api/favorites/weapons/${favId}/`, {
+      await api.delete(`/api/favorites/weapons/${favId}/`, { // <-- CHANGED
         headers: { Authorization: `Bearer ${token}` },
       });
       setFavorites(favorites.filter((fav) => fav.id !== favId));

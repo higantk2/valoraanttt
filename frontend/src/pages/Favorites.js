@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import api from "../api"; // <-- ADD THIS
+import api from "../api"; // <-- ADDED
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([]);
@@ -12,7 +12,7 @@ export default function Favorites() {
   useEffect(() => {
     async function fetchFavorites() {
       try {
-        // This call is to an external API, so 'axios' is fine
+        // External API
         const agentsRes = await axios.get(
           "https://valorant-api.com/v1/agents?isPlayableCharacter=true"
         );
@@ -22,8 +22,8 @@ export default function Favorites() {
         }, {});
         setAllAgents(agentsMap);
 
-        // --- CHANGED ---
-        const favoritesRes = await api.get("/api/favorites/", {
+        // Your backend
+        const favoritesRes = await api.get("/api/favorites/", { // <-- CHANGED
           headers: { Authorization: `Bearer ${token}` },
         });
         setFavorites(favoritesRes.data);
@@ -46,8 +46,7 @@ export default function Favorites() {
 
   const removeFavorite = async (favId) => {
     try {
-      // --- CHANGED ---
-      await api.delete(`/api/favorites/${favId}/`, {
+      await api.delete(`/api/favorites/${favId}/`, { // <-- CHANGED
         headers: { Authorization: `Bearer ${token}` },
       });
       setFavorites(favorites.filter((fav) => fav.id !== favId));

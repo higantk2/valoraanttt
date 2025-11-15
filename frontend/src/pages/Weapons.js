@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import api from "../api"; // <-- ADD THIS
+import api from "../api"; // <-- ADDED
 
 export default function Weapons() {
   const [allWeapons, setAllWeapons] = useState([]); 
@@ -14,14 +14,14 @@ export default function Weapons() {
   useEffect(() => {
     const fetchAllData = async () => {
         try {
-            // This call is to an external API, so 'axios' is fine
+            // This is an external API, so 'axios' is fine
             const weaponsRes = await axios.get("https://valorant-api.com/v1/weapons");
             const playableWeapons = weaponsRes.data.data.filter(w => w.shopData || w.displayName === 'Melee');
             setAllWeapons(playableWeapons);
             setFilteredWeapons(playableWeapons); 
 
-            // --- CHANGED ---
-            const favoritesRes = await api.get("/api/favorites/weapons/", {
+            // This is your backend, so use 'api'
+            const favoritesRes = await api.get("/api/favorites/weapons/", { // <-- CHANGED
                 headers: { Authorization: `Bearer ${token}` },
             });
             setFavorites(favoritesRes.data);
@@ -60,16 +60,14 @@ export default function Weapons() {
     const exists = favorites.find((f) => f.weapon_uuid === weapon.uuid);
     
     if (exists) {
-      // --- CHANGED ---
-      await api.delete(
-        `/api/favorites/weapons/${exists.id}/`,
+      await api.delete( // <-- CHANGED
+        `/api/favorites/weapons/${exists.id}/`, // <-- CHANGED
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setFavorites(favorites.filter((f) => f.weapon_uuid !== weapon.uuid));
     } else {
-      // --- CHANGED ---
-      const res = await api.post(
-        "/api/favorites/weapons/",
+      const res = await api.post( // <-- CHANGED
+        "/api/favorites/weapons/", // <-- CHANGED
         { weapon_uuid: weapon.uuid, weapon_name: weapon.displayName },
         { headers: { Authorization: `Bearer ${token}` } }
       );
