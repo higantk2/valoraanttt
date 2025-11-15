@@ -9,9 +9,7 @@ export default function AgentDetail() {
   const [error, setError] = useState(null);
   const location = useLocation();
 
-  // Determine where to link "Back" to. 
-  // 'state' is passed from the <Link> component
-  const from = location.state?.from || '/home'; // Default to /home
+  const from = location.state?.from || '/home';
 
   useEffect(() => {
     async function fetchAgentDetail() {
@@ -26,7 +24,6 @@ export default function AgentDetail() {
         setLoading(false);
       }
     }
-
     fetchAgentDetail();
   }, [agentUuid]);
 
@@ -35,74 +32,44 @@ export default function AgentDetail() {
     window.location.href = "/";
   };
   
-  // --- Styles ---
+  // --- Style for dynamic background ---
   const containerStyle = {
     minHeight: "100vh",
     backgroundColor: "#0d0d0d",
     color: "white",
-    padding: "40px",
-    backgroundImage: `linear-gradient(rgba(13, 13, 13, 0.8), rgba(13, 13, 13, 0.8)), url(${agent?.background})`,
+    padding: "20px",
+    backgroundImage: `linear-gradient(rgba(13, 13, 13, 0.85), rgba(13, 13, 13, 0.85)), url(${agent?.background})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
-  };
-  
-  const contentStyle = {
-      backgroundColor: "rgba(26, 26, 26, 0.9)",
-      padding: "25px",
-      borderRadius: "12px",
-      border: "1px solid #e63946",
-      maxWidth: "800px"
-  };
-  
-  const abilityStyle = {
-      display: "flex",
-      alignItems: "center",
-      gap: "20px",
-      margin: "20px 0",
-      borderBottom: "1px solid #333",
-      paddingBottom: "20px"
-  };
-  
-  const abilityIconStyle = {
-      width: "64px",
-      height: "64px",
-      backgroundColor: "#1a1a1a",
-      border: "2px solid #e63946",
-      borderRadius: "50%",
-      padding: "5px"
-  };
-  
-  const navButtonStyle = {
-    backgroundColor: "#e63946",
-    color: "white",
-    border: "none",
-    padding: "8px 12px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    marginLeft: "10px",
-    textDecoration: "none"
+    backgroundAttachment: "fixed"
   };
   // ----------------
 
   if (loading) {
-    return <div style={{...containerStyle, backgroundImage: 'none'}}>Loading agent details...</div>;
+    return <div style={{...containerStyle, backgroundImage: 'none'}}>
+      <h1>Loading agent details...</h1>
+    </div>;
   }
 
   if (error || !agent) {
-    return <div style={{...containerStyle, color: "red", backgroundImage: 'none' }}>{error}</div>;
+    return <div style={{...containerStyle, color: "red", backgroundImage: 'none' }}>
+      <h1>{error}</h1>
+      <Link to={from} className="val-button">
+        &lt; Back
+      </Link>
+    </div>;
   }
 
   return (
     <div style={containerStyle}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: 'center' }}>
-        <Link to={from} style={{ color: "#e63946", fontWeight: "bold", textDecoration: "none" }}>
+      <header className="val-header" style={{marginBottom: 0}}>
+        <Link to={from} className="val-button" style={{marginLeft: 0}}>
           &lt; Back
         </Link>
-        <div>
-            <button onClick={handleLogout} style={navButtonStyle}>
+        <div className="val-header-nav">
+            <button onClick={handleLogout} className="val-button">
                 Logout
             </button>
-            {/* Profile Link REMOVED */}
         </div>
       </header>
       
@@ -112,19 +79,19 @@ export default function AgentDetail() {
           alt={agent.displayName}
           style={{ width: "300px", height: "auto", borderRadius: "8px" }}
         />
-        <div style={contentStyle}>
+        <div className="val-detail-content" style={{maxWidth: '600px', margin: 0}}>
             <h1 style={{color: "#e63946"}}>{agent.displayName}</h1>
             <h3 style={{fontStyle: "italic"}}>{agent.role.displayName}</h3>
             <p>{agent.description}</p>
         </div>
       </div>
       
-      <div style={{...contentStyle, marginTop: "30px"}}>
+      <div className="val-detail-content" style={{marginTop: "30px"}}>
           <h2>Abilities</h2>
           {agent.abilities.map(ability => (
-              <div key={ability.slot} style={abilityStyle}>
+              <div key={ability.slot} className="val-ability-card">
                   {ability.displayIcon && (
-                    <img src={ability.displayIcon} alt={ability.displayName} style={abilityIconStyle} />
+                    <img src={ability.displayIcon} alt={ability.displayName} className="val-ability-icon" />
                   )}
                   <div>
                       <h4>{ability.displayName}</h4>

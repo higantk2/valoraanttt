@@ -9,7 +9,6 @@ export default function WeaponDetail() {
   const [error, setError] = useState(null);
   const location = useLocation();
 
-  // Determine where to link "Back" to
   const from = location.state?.from || '/weapons';
 
   useEffect(() => {
@@ -28,53 +27,34 @@ export default function WeaponDetail() {
     fetchWeaponDetail();
   }, [weaponUuid]);
 
-  // --- Styles ---
-  const containerStyle = {
-    minHeight: "100vh",
-    backgroundColor: "#0d0d0d",
-    color: "white",
-    padding: "40px",
-    backgroundImage: "url('https://images4.alphacoders.com/126/thumb-1920-1264065.png')",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-  };
-  
-  const contentStyle = {
-    backgroundColor: "rgba(26, 26, 26, 0.9)",
-    padding: "25px",
-    borderRadius: "12px",
-    border: "1px solid #06d6a0",
-    maxWidth: "800px",
-    margin: "20px auto"
-  };
-
-  const skinCardStyle = {
-    margin: "10px",
-    border: "2px solid #06d6a0",
-    borderRadius: "10px",
-    padding: "10px",
-    textAlign: "center",
-    width: "200px",
-    backgroundColor: "#1a1a1a",
-    color: "white",
-  };
-  // ----------------
-
   if (loading) {
-    return <div style={containerStyle}>Loading weapon details...</div>;
+    return (
+      <div className="val-container">
+        <h1>Loading weapon details...</h1>
+      </div>
+    );
   }
 
   if (error || !weapon) {
-    return <div style={{...containerStyle, color: "red" }}>{error}</div>;
+    return (
+      <div className="val-container" style={{color: "red" }}>
+        <h1>{error}</h1>
+        <Link to={from} className="val-button">
+          &lt; Back
+        </Link>
+      </div>
+    );
   }
 
   return (
-    <div style={containerStyle}>
-      <Link to={from} style={{ color: "#06d6a0", fontWeight: "bold", textDecoration: "none" }}>
-        &lt; Back
-      </Link>
+    <div className="val-container">
+      <header className="val-header" style={{borderColor: '#06d6a0', marginBottom: 0}}>
+        <Link to={from} className="val-button val-button-green" style={{marginLeft: 0}}>
+          &lt; Back
+        </Link>
+      </header>
       
-      <div style={contentStyle}>
+      <div className="val-detail-content val-detail-content-green">
         <h1 style={{ marginTop: "20px", color: "#06d6a0" }}>{weapon.displayName}</h1>
         <p style={{ fontStyle: "italic", color: "#aaa" }}>{weapon.category ? weapon.category.replace('EEquippableCategory::', '') : 'Weapon'}</p>
         
@@ -117,24 +97,23 @@ export default function WeaponDetail() {
         </div>
 
         <h2 style={{marginTop: '40px', borderTop: '1px solid #06d6a0', paddingTop: '20px'}}>Skins</h2>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        <div className="val-grid" style={{paddingTop: '10px'}}>
             {weapon.skins.map(skin => {
                 if (!skin.displayIcon || skin.displayName.includes('Standard')) {
-                    return null; // Skip default or skins without images
+                    return null;
                 }
                 return (
-                    <div key={skin.uuid} style={skinCardStyle}>
+                    <div key={skin.uuid} className="val-skin-card">
                         <img 
                             src={skin.displayIcon} 
                             alt={skin.displayName}
-                            style={{width: '100%', height: '80px', objectFit: 'contain', marginBottom: '10px'}}
+                            className="val-skin-image"
                         />
                         <p>{skin.displayName}</p>
                     </div>
                 )
             })}
         </div>
-
       </div>
     </div>
   );
